@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Movie Collection</title>
+    <style>
+        /* --- GENERAL RESET & FONTS --- */
+        body, html {
+            margin: 0;
+            padding: 0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            color: white;
+            overflow-x: hidden;
+        }
+
+        /* --- THE BACKGROUND VIDEO --- */
+        #bg-video {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            min-width: 100%; 
+            min-height: 100%;
+            width: auto;
+            height: auto;
+            z-index: -2; /* Pushes video behind everything */
+            transform: translate(-50%, -50%);
+            object-fit: cover; /* Ensures video covers screen without stretching */
+        }
+
+        /* --- THE DARK OVERLAY --- */
+        /* This makes the background darker so text/images pop out */
+        .overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.05); /* 65% black transparency */
+            z-index: -1;
+        }
+
+        /* --- MAIN CONTENT CONTAINER --- */
+        .container {
+            position: relative;
+            z-index: 1;
+            padding: 40px 20px;
+            text-align: center;
+        }
+
+        h1 {
+            font-size: 3rem;
+            margin-bottom: 10px;
+            text-shadow: 2px 2px 8px rgba(0,0,0,0.8);
+        }
+
+        p.subtitle {
+            font-size: 1.2rem;
+            margin-bottom: 40px;
+            opacity: 0.9;
+        }
+
+        /* --- THE THUMBNAIL GRID --- */
+        .gallery {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 25px;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        /* --- INDIVIDUAL THUMBNAIL CARD --- */
+        .card {
+            position: relative;
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 8px 16px rgba(0,0,0,0.5);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            background: #222;
+        }
+
+        .card:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 12px 24px rgba(0,0,0,0.8);
+        }
+
+        .card img {
+            width: 100%;
+            height: 180px;
+            object-fit: cover;
+            display: block;
+        }
+
+        .card-info {
+            padding: 15px;
+            text-align: left;
+        }
+
+        .card-info h3 {
+            margin: 0 0 5px 0;
+            font-size: 1.2rem;
+        }
+
+        .card-info p {
+            margin: 0;
+            font-size: 0.9rem;
+            opacity: 0.8;
+        }
+
+        /* Play button icon overlay */
+        .play-icon {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            font-size: 3rem;
+            color: white;
+            text-shadow: 0 0 10px rgba(0,0,0,0.8);
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .card:hover .play-icon {
+            opacity: 1;
+        }
+
+        /* Remove default link styling */
+        a { text-decoration: none; color: inherit; }
+    </style>
+</head>
+<body>
+
+    <!-- 1. THE BACKGROUND VIDEO -->
+    <!-- IMPORTANT: 'muted' is required for autoplay to work in modern browsers -->
+    <video autoplay muted loop playsinline id="bg-video">
+        <!-- Replace this src with your own video file, e.g., src="my-background.mp4" -->
+        <source src="https://www.w3schools.com/html/mov_bbb.mp4" type="video/mp4">
+        Your browser does not support the video tag.
+    </video>
+
+    <!-- 2. THE DARK OVERLAY -->
+    <div class="overlay"></div>
+
+    <!-- 3. THE MAIN CONTENT -->
+    <div class="container">
+        <h1>My Movie Collection</h1>
+        <p class="subtitle">Click on a thumbnail to watch on YouTube</p>
+
+        <div class="gallery">
+            
+            <!-- MOVIE 1 -->
+            <a href="https://www.youtube.com/watch?v=dQw4w9WgXcQ" target="_blank" class="card">
+                <div class="play-icon">▶</div>
+                <img src="https://placehold.co/400x250/ff0000/white?text=Movie+1" alt="Movie 1 Thumbnail">
+                <div class="card-info">
+                    <h3>Awesome Movie Title</h3>
+                    <p>A short description of the movie goes here.</p>
+                </div>
+            </a>
+
+            <!-- MOVIE 2 -->
+            <a href="https://www.youtube.com/watch?v=9bZkp7q19f0" target="_blank" class="card">
+                <div class="play-icon">▶</div>
+                <img src="https://placehold.co/400x250/0000ff/white?text=Movie+2" alt="Movie 2 Thumbnail">
+                <div class="card-info">
+                    <h3>Another Great Film</h3>
+                    <p>More details about this specific video.</p>
+                </div>
+            </a>
+
+            <!-- MOVIE 3 -->
+            <a href="https://www.youtube.com/watch?v=3JZ_D3ELwOQ" target="_blank" class="card">
+                <div class="play-icon">▶</div>
+                <img src="https://placehold.co/400x250/00aa00/white?text=Movie+3" alt="Movie 3 Thumbnail">
+                <div class="card-info">
+                    <h3>Third Video Title</h3>
+                    <p>Short summary of the third video.</p>
+                </div>
+            </a>
+
+            <!-- Add as many <a class="card"> blocks as you need! -->
+
+        </div>
+    </div>
+
+</body>
+</html>
