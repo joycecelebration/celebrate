@@ -3,185 +3,270 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>My Movie Collection</title>
+    <title>Interactive Video Gallery</title>
     <style>
-        /* --- GENERAL RESET & FONTS --- */
-        body, html {
+        * {
             margin: 0;
             padding: 0;
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            color: white;
-            overflow-x: hidden;
+            box-sizing: border-box;
         }
 
-        /* --- THE BACKGROUND VIDEO --- */
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            overflow: hidden;
+            background: #000;
+        }
+
+        /* BACKGROUND VIDEO */
         #bg-video {
             position: fixed;
             top: 50%;
             left: 50%;
-            min-width: 100%; 
+            min-width: 100%;
             min-height: 100%;
             width: auto;
             height: auto;
-            z-index: -2; /* Pushes video behind everything */
+            z-index: -2;
             transform: translate(-50%, -50%);
-            object-fit: cover; /* Ensures video covers screen without stretching */
+            object-fit: cover;
         }
 
-        /* --- THE DARK OVERLAY --- */
-        /* This makes the background darker so text/images pop out */
+        /* DARK OVERLAY */
         .overlay {
             position: fixed;
             top: 0;
             left: 0;
             width: 100%;
             height: 100%;
-            background: rgba(0, 0, 0, 0.05); /* 65% black transparency */
+            background: rgba(0, 0, 0, 0.5);
             z-index: -1;
         }
 
-        /* --- MAIN CONTENT CONTAINER --- */
-        .container {
+        /* MAIN CONTAINER - Your "Canvas" */
+        #canvas-container {
             position: relative;
-            z-index: 1;
-            padding: 40px 20px;
-            text-align: center;
+            width: 100vw;
+            height: 100vh;
+            overflow: hidden;
         }
 
-        h1 {
-            font-size: 3rem;
-            margin-bottom: 10px;
-            text-shadow: 2px 2px 8px rgba(0,0,0,0.8);
-        }
-
-        p.subtitle {
-            font-size: 1.2rem;
-            margin-bottom: 40px;
-            opacity: 0.9;
-        }
-
-        /* --- THE THUMBNAIL GRID --- */
-        .gallery {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-            gap: 25px;
-            max-width: 1200px;
-            margin: 0 auto;
-        }
-
-        /* --- INDIVIDUAL THUMBNAIL CARD --- */
-        .card {
-            position: relative;
+        /* VIDEO THUMBNAILS - Position these anywhere! */
+        .video-point {
+            position: absolute;
+            cursor: pointer;
             border-radius: 12px;
             overflow: hidden;
-            box-shadow: 0 8px 16px rgba(0,0,0,0.5);
-            transition: transform 0.3s ease, box-shadow 0.3s ease;
-            background: #222;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.6);
+            transition: all 0.3s ease;
+            border: 3px solid rgba(255, 255, 255, 0.3);
+            background: rgba(0, 0, 0, 0.6);
         }
 
-        .card:hover {
-            transform: translateY(-8px);
-            box-shadow: 0 12px 24px rgba(0,0,0,0.8);
+        .video-point:hover {
+            transform: scale(1.1);
+            box-shadow: 0 12px 40px rgba(0, 0, 0, 0.8);
+            border-color: rgba(255, 255, 255, 0.9);
+            z-index: 100;
         }
 
-        .card img {
-            width: 100%;
-            height: 180px;
+        .video-point video {
+            width: 200px;
+            height: 120px;
+            object-fit: cover;
+            display: block;
+            pointer-events: none; /* Prevents video controls from interfering */
+        }
+
+        .video-point .label {
+            padding: 8px;
+            color: white;
+            text-align: center;
+            font-size: 14px;
+            font-weight: bold;
+            text-shadow: 1px 1px 3px rgba(0,0,0,0.9);
+        }
+
+        /* STILL IMAGES */
+        .image-point {
+            position: absolute;
+            cursor: pointer;
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.6);
+            transition: all 0.3s ease;
+            border: 3px solid rgba(255, 255, 255, 0.3);
+        }
+
+        .image-point:hover {
+            transform: scale(1.15);
+            box-shadow: 0 12px 40px rgba(255, 255, 255, 0.3);
+            border-color: rgba(255, 255, 255, 0.9);
+            z-index: 100;
+        }
+
+        .image-point img {
+            width: 180px;
+            height: 120px;
             object-fit: cover;
             display: block;
         }
 
-        .card-info {
-            padding: 15px;
-            text-align: left;
+        /* LIGHTBOX FOR FULL-SIZE IMAGES */
+        #lightbox {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.95);
+            z-index: 1000;
+            justify-content: center;
+            align-items: center;
+            cursor: pointer;
         }
 
-        .card-info h3 {
-            margin: 0 0 5px 0;
-            font-size: 1.2rem;
+        #lightbox.active {
+            display: flex;
         }
 
-        .card-info p {
-            margin: 0;
-            font-size: 0.9rem;
-            opacity: 0.8;
+        #lightbox img {
+            max-width: 90%;
+            max-height: 90%;
+            object-fit: contain;
+            border-radius: 8px;
+            box-shadow: 0 0 40px rgba(255, 255, 255, 0.2);
         }
 
-        /* Play button icon overlay */
-        .play-icon {
+        #lightbox .close {
             position: absolute;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            font-size: 3rem;
+            top: 20px;
+            right: 40px;
             color: white;
+            font-size: 50px;
+            cursor: pointer;
             text-shadow: 0 0 10px rgba(0,0,0,0.8);
-            opacity: 0;
-            transition: opacity 0.3s ease;
         }
 
-        .card:hover .play-icon {
-            opacity: 1;
+        /* TITLE */
+        .title {
+            position: absolute;
+            top: 30px;
+            left: 50%;
+            transform: translateX(-50%);
+            color: white;
+            font-size: 2.5rem;
+            text-shadow: 0 0 20px rgba(0,0,0,0.9);
+            z-index: 50;
+            text-align: center;
         }
-
-        /* Remove default link styling */
-        a { text-decoration: none; color: inherit; }
     </style>
 </head>
 <body>
 
-    <!-- 1. THE BACKGROUND VIDEO -->
-    <!-- IMPORTANT: 'muted' is required for autoplay to work in modern browsers -->
+    <!-- BACKGROUND VIDEO -->
     <video autoplay muted loop playsinline id="bg-video">
-        <!-- Replace this src with your own video file, e.g., src="my-background.mp4" -->
-        <source src="https://www.w3schools.com/html/mov_bbb.mp4" type="video/mp4">
-        Your browser does not support the video tag.
+        <source src="videos/background.mp4" type="video/mp4">
     </video>
 
-    <!-- 2. THE DARK OVERLAY -->
     <div class="overlay"></div>
 
-    <!-- 3. THE MAIN CONTENT -->
-    <div class="container">
-        <h1>My Movie Collection</h1>
-        <p class="subtitle">Click on a thumbnail to watch on YouTube</p>
+    <div class="title">My Interactive Gallery</div>
 
-        <div class="gallery">
-            
-            <!-- MOVIE 1 -->
-            <a href="https://www.youtube.com/watch?v=dQw4w9WgXcQ" target="_blank" class="card">
-                <div class="play-icon">▶</div>
-                <img src="https://placehold.co/400x250/ff0000/white?text=Movie+1" alt="Movie 1 Thumbnail">
-                <div class="card-info">
-                    <h3>Awesome Movie Title</h3>
-                    <p>A short description of the movie goes here.</p>
-                </div>
-            </a>
+    <!-- CANVAS CONTAINER -->
+    <div id="canvas-container">
 
-            <!-- MOVIE 2 -->
-            <a href="https://www.youtube.com/watch?v=9bZkp7q19f0" target="_blank" class="card">
-                <div class="play-icon">▶</div>
-                <img src="https://placehold.co/400x250/0000ff/white?text=Movie+2" alt="Movie 2 Thumbnail">
-                <div class="card-info">
-                    <h3>Another Great Film</h3>
-                    <p>More details about this specific video.</p>
-                </div>
-            </a>
+        <!-- VIDEO 1 - Position: Top Left -->
+        <a href="videos/video1.mp4" target="_blank" class="video-point" style="top: 15%; left: 10%;">
+            <video autoplay muted loop playsinline>
+                <source src="videos/video1-preview.mp4" type="video/mp4">
+            </video>
+            <div class="label">Video 1</div>
+        </a>
 
-            <!-- MOVIE 3 -->
-            <a href="https://www.youtube.com/watch?v=3JZ_D3ELwOQ" target="_blank" class="card">
-                <div class="play-icon">▶</div>
-                <img src="https://placehold.co/400x250/00aa00/white?text=Movie+3" alt="Movie 3 Thumbnail">
-                <div class="card-info">
-                    <h3>Third Video Title</h3>
-                    <p>Short summary of the third video.</p>
-                </div>
-            </a>
+        <!-- VIDEO 2 - Position: Top Right -->
+        <a href="videos/video2.mp4" target="_blank" class="video-point" style="top: 15%; right: 10%;">
+            <video autoplay muted loop playsinline>
+                <source src="videos/video2-preview.mp4" type="video/mp4">
+            </video>
+            <div class="label">Video 2</div>
+        </a>
 
-            <!-- Add as many <a class="card"> blocks as you need! -->
+        <!-- VIDEO 3 - Position: Center Left -->
+        <a href="videos/video3.mp4" target="_blank" class="video-point" style="top: 50%; left: 8%;">
+            <video autoplay muted loop playsinline>
+                <source src="videos/video3-preview.mp4" type="video/mp4">
+            </video>
+            <div class="label">Video 3</div>
+        </a>
 
+        <!-- VIDEO 4 - Position: Center Right -->
+        <a href="videos/video4.mp4" target="_blank" class="video-point" style="top: 50%; right: 8%;">
+            <video autoplay muted loop playsinline>
+                <source src="videos/video4-preview.mp4" type="video/mp4">
+            </video>
+            <div class="label">Video 4</div>
+        </a>
+
+        <!-- VIDEO 5 - Position: Bottom Center -->
+        <a href="videos/video5.mp4" target="_blank" class="video-point" style="bottom: 15%; left: 50%; transform: translateX(-50%);">
+            <video autoplay muted loop playsinline>
+                <source src="videos/video5-preview.mp4" type="video/mp4">
+            </video>
+            <div class="label">Video 5</div>
+        </a>
+
+        <!-- STILL IMAGE 1 - Position: Upper Center -->
+        <div class="image-point" style="top: 35%; left: 50%; transform: translateX(-50%);" onclick="openLightbox('images/image1-full.jpg')">
+            <img src="images/image1-thumb.jpg" alt="Image 1">
         </div>
+
+        <!-- STILL IMAGE 2 - Position: Lower Left -->
+        <div class="image-point" style="bottom: 35%; left: 30%;" onclick="openLightbox('images/image2-full.jpg')">
+            <img src="images/image2-thumb.jpg" alt="Image 2">
+        </div>
+
+        <!-- STILL IMAGE 3 - Position: Lower Right -->
+        <div class="image-point" style="bottom: 35%; right: 30%;" onclick="openLightbox('images/image3-full.jpg')">
+            <img src="images/image3-thumb.jpg" alt="Image 3">
+        </div>
+
     </div>
+
+    <!-- LIGHTBOX -->
+    <div id="lightbox" onclick="closeLightbox()">
+        <span class="close">&times;</span>
+        <img id="lightbox-img" src="" alt="Full size">
+    </div>
+
+    <script>
+        // Lightbox functionality
+        function openLightbox(imageSrc) {
+            document.getElementById('lightbox-img').src = imageSrc;
+            document.getElementById('lightbox').classList.add('active');
+        }
+
+        function closeLightbox() {
+            document.getElementById('lightbox').classList.remove('active');
+        }
+
+        // Close lightbox with Escape key
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Escape') {
+                closeLightbox();
+            }
+        });
+
+        // Optional: Pause all preview videos when not hovering
+        document.querySelectorAll('.video-point').forEach(point => {
+            point.addEventListener('mouseenter', function() {
+                this.querySelector('video').play();
+            });
+            point.addEventListener('mouseleave', function() {
+                this.querySelector('video').pause();
+            });
+        });
+    </script>
 
 </body>
 </html>
