@@ -13,7 +13,7 @@
 
         body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            overflow: hidden;
+            overflow-x: hidden;
             background: #000;
         }
 
@@ -46,11 +46,12 @@
         #canvas-container {
             position: relative;
             width: 100vw;
-            height: 100vh;
-            overflow: hidden;
+            min-height: 100vh;
+            overflow: visible;
+            padding: 20px;
         }
 
-        /* VIDEO THUMBNAILS */
+        /* VIDEO THUMBNAILS - DESKTOP DEFAULT */
         .video-point {
             position: absolute;
             cursor: pointer;
@@ -99,7 +100,7 @@
             font-weight: bold;
         }
 
-        /* STILL IMAGES */
+        /* STILL IMAGES - DESKTOP DEFAULT */
         .image-point {
             position: absolute;
             cursor: pointer;
@@ -122,6 +123,20 @@
             height: 120px;
             object-fit: cover;
             display: block;
+        }
+
+        /* TITLE */
+        .title {
+            position: absolute;
+            top: 30px;
+            left: 50%;
+            transform: translateX(-50%);
+            color: white;
+            font-size: 2.5rem;
+            text-shadow: 0 0 20px rgba(0,0,0,0.9);
+            z-index: 50;
+            text-align: center;
+            width: 100%;
         }
 
         /* LIGHTBOX */
@@ -159,17 +174,114 @@
             cursor: pointer;
         }
 
-        /* TITLE */
-        .title {
-            position: absolute;
-            top: 30px;
-            left: 50%;
-            transform: translateX(-50%);
-            color: white;
-            font-size: 2.5rem;
-            text-shadow: 0 0 20px rgba(0,0,0,0.9);
-            z-index: 50;
-            text-align: center;
+        /* ============================================ */
+        /* TABLET RESPONSIVE (max-width: 1024px) */
+        /* ============================================ */
+        @media screen and (max-width: 1024px) {
+            .video-point video,
+            .video-point img {
+                width: 160px;
+                height: 100px;
+            }
+
+            .image-point img {
+                width: 150px;
+                height: 100px;
+            }
+
+            .title {
+                font-size: 2rem;
+                top: 20px;
+            }
+        }
+
+        /* ============================================ */
+        /* MOBILE RESPONSIVE (max-width: 768px) */
+        /* ============================================ */
+        @media screen and (max-width: 768px) {
+            /* Hide background video on mobile for performance */
+            #bg-video {
+                display: none;
+            }
+            
+            /* Darker overlay as fallback */
+            .overlay {
+                background: rgba(0, 0, 0, 0.8);
+            }
+
+            /* Change to relative positioning for mobile */
+            #canvas-container {
+                position: relative;
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+                padding: 80px 15px 40px;
+                gap: 25px;
+            }
+
+            /* Reset all absolute positioning for mobile */
+            .video-point,
+            .image-point {
+                position: relative !important;
+                top: auto !important;
+                left: auto !important;
+                right: auto !important;
+                bottom: auto !important;
+                transform: none !important;
+                width: 100%;
+                max-width: 350px;
+            }
+
+            /* Smaller thumbnails on mobile */
+            .video-point video,
+            .video-point img {
+                width: 100%;
+                height: auto;
+                aspect-ratio: 16/9;
+            }
+
+            .image-point img {
+                width: 100%;
+                height: auto;
+                aspect-ratio: 3/2;
+            }
+
+            .video-point .label {
+                font-size: 16px;
+                padding: 12px;
+            }
+
+            /* Smaller title on mobile */
+            .title {
+                font-size: 1.8rem;
+                top: 20px;
+                padding: 0 20px;
+            }
+
+            /* Adjust lightbox for mobile */
+            #lightbox .close {
+                top: 15px;
+                right: 20px;
+                font-size: 40px;
+            }
+        }
+
+        /* ============================================ */
+        /* SMALL MOBILE (max-width: 480px) */
+        /* ============================================ */
+        @media screen and (max-width: 480px) {
+            .title {
+                font-size: 1.5rem;
+            }
+
+            .video-point .label {
+                font-size: 14px;
+            }
+
+            #canvas-container {
+                gap: 20px;
+                padding: 70px 10px 30px;
+            }
         }
     </style>
 </head>
@@ -185,75 +297,54 @@
 
     <div id="canvas-container">
 
-        <!-- ============================================ -->
-        <!-- GITHUB-HOSTED VIDEO (small file) -->
-        <!-- ============================================ -->
-        <a href="videos/Milford.mp4" target="_blank" class="video-point" style="top: 15%; left: 10%;">
+        <!-- VIDEO 1 -->
+        <a href="videos/video1.mp4" target="_blank" class="video-point" style="top: 15%; left: 10%;">
             <video autoplay muted loop playsinline>
-                <source src="videos/Milford-preview.mp4" type="video/mp4">
+                <source src="videos/video1-preview.mp4" type="video/mp4">
             </video>
             <div class="label">Video 1 (GitHub)</div>
         </a>
 
-        <!-- ============================================ -->
-        <!-- YOUTUBE VIDEO (large file - uses YouTube) -->
-        <!-- ============================================ -->
-        <a href="https://youtu.be/emsv37wae2Q?si=f0ULXBEOjLetJ-qd" target="_blank" class="video-point" style="top: 15%; right: 10%;">
-            <!-- Option 1: Use YouTube thumbnail -->
+        <!-- VIDEO 2 - YouTube -->
+        <a href="https://www.youtube.com/watch?v=dQw4w9WgXcQ" target="_blank" class="video-point" style="top: 15%; right: 10%;">
             <img src="https://img.youtube.com/vi/dQw4w9WgXcQ/hqdefault.jpg" alt="Video 2">
-            <!-- Option 2: Use a small preview video from GitHub -->
-            <!-- <video autoplay muted loop playsinline>
-                <source src="videos/video2-preview.mp4" type="video/mp4">
-            </video> -->
             <div class="youtube-badge">YouTube</div>
             <div class="label">Video 2 (YouTube)</div>
         </a>
 
-        <!-- ============================================ -->
-        <!-- ANOTHER YOUTUBE VIDEO -->
-        <!-- ============================================ -->
-        <a href="https://youtu.be/2CaAso4sAxE?si=3Er9jj6cho55dn77" target="_blank" class="video-point" style="top: 50%; left: 8%;">
+        <!-- VIDEO 3 - YouTube -->
+        <a href="https://www.youtube.com/watch?v=9bZkp7q19f0" target="_blank" class="video-point" style="top: 50%; left: 8%;">
             <img src="https://img.youtube.com/vi/9bZkp7q19f0/hqdefault.jpg" alt="Video 3">
             <div class="youtube-badge">YouTube</div>
             <div class="label">Video 3 (YouTube)</div>
         </a>
 
-        <!-- ============================================ -->
-        <!-- GITHUB-HOSTED VIDEO -->
-        <!-- ============================================ -->
-        <a href="videos/CHRISTMAS_1999.mp4" target="_blank" class="video-point" style="top: 50%; right: 8%;">
+        <!-- VIDEO 4 -->
+        <a href="videos/video4.mp4" target="_blank" class="video-point" style="top: 50%; right: 8%;">
             <video autoplay muted loop playsinline>
-                <source src="videos/CHRISTMAS_1999-preview.mp4" type="video/mp4">
+                <source src="videos/video4-preview.mp4" type="video/mp4">
             </video>
             <div class="label">Video 4 (GitHub)</div>
         </a>
-        <!-- ============================================ -->
-        <!-- GITHUB-HOSTED VIDEO -->
-        <!-- ============================================ -->
-        <a href="videos/JULY_4TH_2001.mp4" target="_blank" class="video-point" style="top: 50%; right: 8%;">
-            <video autoplay muted loop playsinline>
-                <source src="videos/JULY_4TH_2001-preview.mp4" type="video/mp4">
-            </video>
-            <div class="label">Video 4 (GitHub)</div>
-        </a>
-        <!-- ============================================ -->
-        <!-- ANOTHER YOUTUBE VIDEO -->
-        <!-- ============================================ -->
+
+        <!-- VIDEO 5 - YouTube -->
         <a href="https://www.youtube.com/watch?v=3JZ_D3ELwOQ" target="_blank" class="video-point" style="bottom: 15%; left: 50%; transform: translateX(-50%);">
             <img src="https://img.youtube.com/vi/3JZ_D3ELwOQ/hqdefault.jpg" alt="Video 5">
             <div class="youtube-badge">YouTube</div>
             <div class="label">Video 5 (YouTube)</div>
         </a>
 
-        <!-- STILL IMAGES -->
+        <!-- STILL IMAGE 1 -->
         <div class="image-point" style="top: 35%; left: 50%; transform: translateX(-50%);" onclick="openLightbox('images/image1-full.jpg')">
             <img src="images/image1-thumb.jpg" alt="Image 1">
         </div>
 
+        <!-- STILL IMAGE 2 -->
         <div class="image-point" style="bottom: 35%; left: 30%;" onclick="openLightbox('images/image2-full.jpg')">
             <img src="images/image2-thumb.jpg" alt="Image 2">
         </div>
 
+        <!-- STILL IMAGE 3 -->
         <div class="image-point" style="bottom: 35%; right: 30%;" onclick="openLightbox('images/image3-full.jpg')">
             <img src="images/image3-thumb.jpg" alt="Image 3">
         </div>
@@ -282,11 +373,20 @@
             }
         });
 
-        // Pause/play preview videos on hover
+        // Pause/play preview videos on hover/touch
         document.querySelectorAll('.video-point video').forEach(video => {
             const parent = video.closest('.video-point');
             parent.addEventListener('mouseenter', () => video.play());
             parent.addEventListener('mouseleave', () => video.pause());
+            
+            // Touch support for mobile
+            parent.addEventListener('touchstart', () => {
+                if (video.paused) {
+                    video.play();
+                } else {
+                    video.pause();
+                }
+            });
         });
     </script>
 
