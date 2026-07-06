@@ -42,7 +42,7 @@
             z-index: -1;
         }
 
-        /* MAIN CONTAINER - Your "Canvas" */
+        /* MAIN CONTAINER */
         #canvas-container {
             position: relative;
             width: 100vw;
@@ -50,7 +50,7 @@
             overflow: hidden;
         }
 
-        /* VIDEO THUMBNAILS - Position these anywhere! */
+        /* VIDEO THUMBNAILS */
         .video-point {
             position: absolute;
             cursor: pointer;
@@ -69,12 +69,13 @@
             z-index: 100;
         }
 
-        .video-point video {
+        .video-point video,
+        .video-point img {
             width: 200px;
             height: 120px;
             object-fit: cover;
             display: block;
-            pointer-events: none; /* Prevents video controls from interfering */
+            pointer-events: none;
         }
 
         .video-point .label {
@@ -84,6 +85,18 @@
             font-size: 14px;
             font-weight: bold;
             text-shadow: 1px 1px 3px rgba(0,0,0,0.9);
+        }
+
+        .video-point .youtube-badge {
+            position: absolute;
+            top: 5px;
+            right: 5px;
+            background: #ff0000;
+            color: white;
+            padding: 3px 8px;
+            border-radius: 4px;
+            font-size: 11px;
+            font-weight: bold;
         }
 
         /* STILL IMAGES */
@@ -111,7 +124,7 @@
             display: block;
         }
 
-        /* LIGHTBOX FOR FULL-SIZE IMAGES */
+        /* LIGHTBOX */
         #lightbox {
             display: none;
             position: fixed;
@@ -135,7 +148,6 @@
             max-height: 90%;
             object-fit: contain;
             border-radius: 8px;
-            box-shadow: 0 0 40px rgba(255, 255, 255, 0.2);
         }
 
         #lightbox .close {
@@ -145,7 +157,6 @@
             color: white;
             font-size: 50px;
             cursor: pointer;
-            text-shadow: 0 0 10px rgba(0,0,0,0.8);
         }
 
         /* TITLE */
@@ -170,63 +181,71 @@
     </video>
 
     <div class="overlay"></div>
-
     <div class="title">My Interactive Gallery</div>
 
-    <!-- CANVAS CONTAINER -->
     <div id="canvas-container">
 
-        <!-- VIDEO 1 - Position: Top Left -->
+        <!-- ============================================ -->
+        <!-- GITHUB-HOSTED VIDEO (small file) -->
+        <!-- ============================================ -->
         <a href="videos/video1.mp4" target="_blank" class="video-point" style="top: 15%; left: 10%;">
             <video autoplay muted loop playsinline>
                 <source src="videos/video1-preview.mp4" type="video/mp4">
             </video>
-            <div class="label">Video 1</div>
+            <div class="label">Video 1 (GitHub)</div>
         </a>
 
-        <!-- VIDEO 2 - Position: Top Right -->
-        <a href="videos/video2.mp4" target="_blank" class="video-point" style="top: 15%; right: 10%;">
-            <video autoplay muted loop playsinline>
+        <!-- ============================================ -->
+        <!-- YOUTUBE VIDEO (large file - uses YouTube) -->
+        <!-- ============================================ -->
+        <a href="https://youtu.be/emsv37wae2Q?si=f0ULXBEOjLetJ-qd" target="_blank" class="video-point" style="top: 15%; right: 10%;">
+            <!-- Option 1: Use YouTube thumbnail -->
+            <img src="https://img.youtube.com/vi/dQw4w9WgXcQ/hqdefault.jpg" alt="Video 2">
+            <!-- Option 2: Use a small preview video from GitHub -->
+            <!-- <video autoplay muted loop playsinline>
                 <source src="videos/video2-preview.mp4" type="video/mp4">
-            </video>
-            <div class="label">Video 2</div>
+            </video> -->
+            <div class="youtube-badge">YouTube</div>
+            <div class="label">Video 2 (YouTube)</div>
         </a>
 
-        <!-- VIDEO 3 - Position: Center Left -->
-        <a href="videos/video3.mp4" target="_blank" class="video-point" style="top: 50%; left: 8%;">
-            <video autoplay muted loop playsinline>
-                <source src="videos/video3-preview.mp4" type="video/mp4">
-            </video>
-            <div class="label">Video 3</div>
+        <!-- ============================================ -->
+        <!-- ANOTHER YOUTUBE VIDEO -->
+        <!-- ============================================ -->
+        <a href="https://youtu.be/2CaAso4sAxE?si=3Er9jj6cho55dn77" target="_blank" class="video-point" style="top: 50%; left: 8%;">
+            <img src="https://img.youtube.com/vi/9bZkp7q19f0/hqdefault.jpg" alt="Video 3">
+            <div class="youtube-badge">YouTube</div>
+            <div class="label">Video 3 (YouTube)</div>
         </a>
 
-        <!-- VIDEO 4 - Position: Center Right -->
+        <!-- ============================================ -->
+        <!-- GITHUB-HOSTED VIDEO -->
+        <!-- ============================================ -->
         <a href="videos/video4.mp4" target="_blank" class="video-point" style="top: 50%; right: 8%;">
             <video autoplay muted loop playsinline>
                 <source src="videos/video4-preview.mp4" type="video/mp4">
             </video>
-            <div class="label">Video 4</div>
+            <div class="label">Video 4 (GitHub)</div>
         </a>
 
-        <!-- VIDEO 5 - Position: Bottom Center -->
-        <a href="videos/video5.mp4" target="_blank" class="video-point" style="bottom: 15%; left: 50%; transform: translateX(-50%);">
-            <video autoplay muted loop playsinline>
-                <source src="videos/video5-preview.mp4" type="video/mp4">
-            </video>
-            <div class="label">Video 5</div>
+        <!-- ============================================ -->
+        <!-- ANOTHER YOUTUBE VIDEO -->
+        <!-- ============================================ -->
+        <a href="https://www.youtube.com/watch?v=3JZ_D3ELwOQ" target="_blank" class="video-point" style="bottom: 15%; left: 50%; transform: translateX(-50%);">
+            <img src="https://img.youtube.com/vi/3JZ_D3ELwOQ/hqdefault.jpg" alt="Video 5">
+            <div class="youtube-badge">YouTube</div>
+            <div class="label">Video 5 (YouTube)</div>
         </a>
 
-        <!-- STILL IMAGE 1 - Position: Upper Center -->
+        <!-- STILL IMAGES -->
         <div class="image-point" style="top: 35%; left: 50%; transform: translateX(-50%);" onclick="openLightbox('images/image1-full.jpg')">
             <img src="images/image1-thumb.jpg" alt="Image 1">
         </div>
 
-        <!-- STILL IMAGE 2 - Position: Lower Left -->
         <div class="image-point" style="bottom: 35%; left: 30%;" onclick="openLightbox('images/image2-full.jpg')">
             <img src="images/image2-thumb.jpg" alt="Image 2">
         </div>
 
-        <!-- STILL IMAGE 3 - Position: Lower Right -->
         <div class="image-point" style="bottom: 35%; right: 30%;" onclick="openLightbox('images/image3-full.jpg')">
             <img src="images/image3-thumb.jpg" alt="Image 3">
         </div>
@@ -240,7 +259,6 @@
     </div>
 
     <script>
-        // Lightbox functionality
         function openLightbox(imageSrc) {
             document.getElementById('lightbox-img').src = imageSrc;
             document.getElementById('lightbox').classList.add('active');
@@ -250,21 +268,17 @@
             document.getElementById('lightbox').classList.remove('active');
         }
 
-        // Close lightbox with Escape key
         document.addEventListener('keydown', function(e) {
             if (e.key === 'Escape') {
                 closeLightbox();
             }
         });
 
-        // Optional: Pause all preview videos when not hovering
-        document.querySelectorAll('.video-point').forEach(point => {
-            point.addEventListener('mouseenter', function() {
-                this.querySelector('video').play();
-            });
-            point.addEventListener('mouseleave', function() {
-                this.querySelector('video').pause();
-            });
+        // Pause/play preview videos on hover
+        document.querySelectorAll('.video-point video').forEach(video => {
+            const parent = video.closest('.video-point');
+            parent.addEventListener('mouseenter', () => video.play());
+            parent.addEventListener('mouseleave', () => video.pause());
         });
     </script>
 
