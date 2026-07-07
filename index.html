@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Celebration of the Life of Joyce Lorraine Douglas</title>
+    <title>Interactive Video Gallery</title>
     <style>
         * {
             margin: 0;
@@ -13,130 +13,153 @@
 
         body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            overflow-x: hidden;
+            overflow: hidden;
             background: #000;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
         }
 
-        /* BACKGROUND VIDEO */
-/* BACKGROUND VIDEO - Shows full video without cropping */
-#bg-video {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    z-index: -2;
-    object-fit: contain;
-    background: #000;
-}
-
-/* DARK OVERLAY */
-.overlay {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background: rgba(0, 0, 0, 0.0);
-    z-index: -1;
-    pointer-events: none;
-}
-
-        /* MAIN CONTAINER */
+        /* ============================================ */
+        /* MAIN CONTAINER - Maintains aspect ratio */
+        /* ============================================ */
         #canvas-container {
             position: relative;
             width: 100vw;
-            min-height: 100vh;
-            overflow: visible;
-            padding: 20px;
+            height: 100vh;
+            max-width: 100vw;
+            max-height: 100vh;
+            overflow: hidden;
         }
 
-        /* VIDEO THUMBNAILS - DESKTOP DEFAULT */
+        /* For 16:9 background video, use this aspect ratio */
+        @media (min-aspect-ratio: 16/9) {
+            #canvas-container {
+                width: 100vw;
+                height: calc(100vw * 9 / 16);
+                max-height: 100vh;
+            }
+        }
+
+        @media (max-aspect-ratio: 16/9) {
+            #canvas-container {
+                width: calc(100vh * 16 / 9);
+                height: 100vh;
+                max-width: 100vw;
+            }
+        }
+
+        /* BACKGROUND VIDEO */
+        #bg-video {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            z-index: 1;
+        }
+
+        /* DARK OVERLAY */
+        .overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            z-index: 2;
+        }
+
+        /* TITLE */
+        .title {
+            position: absolute;
+            top: 5%;
+            left: 50%;
+            transform: translateX(-50%);
+            color: white;
+            font-size: 3vw;
+            text-shadow: 0 0 20px rgba(0,0,0,0.9);
+            z-index: 10;
+            text-align: center;
+            white-space: nowrap;
+        }
+
+        /* VIDEO THUMBNAILS - Positioned relative to container */
         .video-point {
             position: absolute;
             cursor: pointer;
-            border-radius: 12px;
+            border-radius: 1vw;
             overflow: hidden;
-            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.6);
+            box-shadow: 0 0.5vw 2vw rgba(0, 0, 0, 0.6);
             transition: all 0.3s ease;
-            border: 3px solid rgba(255, 255, 255, 0.3);
+            border: 0.2vw solid rgba(255, 255, 255, 0.3);
             background: rgba(0, 0, 0, 0.6);
+            z-index: 5;
         }
 
         .video-point:hover {
             transform: scale(1.1);
-            box-shadow: 0 12px 40px rgba(0, 0, 0, 0.8);
+            box-shadow: 0 1vw 3vw rgba(0, 0, 0, 0.8);
             border-color: rgba(255, 255, 255, 0.9);
             z-index: 100;
         }
 
         .video-point video,
         .video-point img {
-            width: 200px;
-            height: 120px;
+            width: 15vw;
+            height: 9vw;
             object-fit: cover;
             display: block;
             pointer-events: none;
         }
 
         .video-point .label {
-            padding: 8px;
+            padding: 0.5vw;
             color: white;
             text-align: center;
-            font-size: 14px;
+            font-size: 1vw;
             font-weight: bold;
             text-shadow: 1px 1px 3px rgba(0,0,0,0.9);
         }
 
         .video-point .youtube-badge {
             position: absolute;
-            top: 5px;
-            right: 5px;
+            top: 0.5vw;
+            right: 0.5vw;
             background: #ff0000;
             color: white;
-            padding: 3px 8px;
-            border-radius: 4px;
-            font-size: 11px;
+            padding: 0.3vw 0.6vw;
+            border-radius: 0.3vw;
+            font-size: 0.8vw;
             font-weight: bold;
         }
 
-        /* STILL IMAGES - DESKTOP DEFAULT */
+        /* STILL IMAGES */
         .image-point {
             position: absolute;
             cursor: pointer;
-            border-radius: 12px;
+            border-radius: 1vw;
             overflow: hidden;
-            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.6);
+            box-shadow: 0 0.5vw 2vw rgba(0, 0, 0, 0.6);
             transition: all 0.3s ease;
-            border: 3px solid rgba(255, 255, 255, 0.3);
+            border: 0.2vw solid rgba(255, 255, 255, 0.3);
+            z-index: 5;
         }
 
         .image-point:hover {
             transform: scale(1.15);
-            box-shadow: 0 12px 40px rgba(255, 255, 255, 0.3);
+            box-shadow: 0 1vw 3vw rgba(255, 255, 255, 0.3);
             border-color: rgba(255, 255, 255, 0.9);
             z-index: 100;
         }
 
         .image-point img {
-            width: 180px;
-            height: 120px;
+            width: 13vw;
+            height: 9vw;
             object-fit: cover;
             display: block;
-        }
-
-        /* TITLE */
-        .title {
-            position: absolute;
-            top: 30px;
-            left: 50%;
-            transform: translateX(-50%);
-            color: white;
-            font-size: 2.5rem;
-            text-shadow: 0 0 20px rgba(0,0,0,0.9);
-            z-index: 50;
-            text-align: center;
-            width: 100%;
         }
 
         /* LIGHTBOX */
@@ -175,43 +198,18 @@
         }
 
         /* ============================================ */
-        /* TABLET RESPONSIVE (max-width: 1024px) */
-        /* ============================================ */
-        @media screen and (max-width: 1024px) {
-            .video-point video,
-            .video-point img {
-                width: 160px;
-                height: 100px;
-            }
-
-            .image-point img {
-                width: 150px;
-                height: 100px;
-            }
-
-            .title {
-                font-size: 2rem;
-                top: 20px;
-            }
-        }
-
-        /* ============================================ */
-        /* MOBILE RESPONSIVE (max-width: 768px) */
+        /* MOBILE RESPONSIVE */
         /* ============================================ */
         @media screen and (max-width: 768px) {
-            /* Hide background video on mobile for performance */
-            #bg-video {
-                display: none;
-            }
-            
-            /* Darker overlay as fallback */
-            .overlay {
-                background: rgba(0, 0, 0, 0.8);
+            body {
+                overflow-y: auto;
             }
 
-            /* Change to relative positioning for mobile */
             #canvas-container {
-                position: relative;
+                width: 100vw !important;
+                height: auto !important;
+                max-width: 100vw !important;
+                max-height: none !important;
                 display: flex;
                 flex-direction: column;
                 align-items: center;
@@ -219,7 +217,14 @@
                 gap: 25px;
             }
 
-            /* Reset all absolute positioning for mobile */
+            #bg-video {
+                display: none;
+            }
+
+            .overlay {
+                background: rgba(0, 0, 0, 0.8);
+            }
+
             .video-point,
             .image-point {
                 position: relative !important;
@@ -232,7 +237,6 @@
                 max-width: 350px;
             }
 
-            /* Smaller thumbnails on mobile */
             .video-point video,
             .video-point img {
                 width: 100%;
@@ -251,51 +255,25 @@
                 padding: 12px;
             }
 
-            /* Smaller title on mobile */
             .title {
                 font-size: 1.8rem;
+                position: fixed;
                 top: 20px;
-                padding: 0 20px;
-            }
-
-            /* Adjust lightbox for mobile */
-            #lightbox .close {
-                top: 15px;
-                right: 20px;
-                font-size: 40px;
-            }
-        }
-
-        /* ============================================ */
-        /* SMALL MOBILE (max-width: 480px) */
-        /* ============================================ */
-        @media screen and (max-width: 480px) {
-            .title {
-                font-size: 1.5rem;
-            }
-
-            .video-point .label {
-                font-size: 14px;
-            }
-
-            #canvas-container {
-                gap: 20px;
-                padding: 70px 10px 30px;
             }
         }
     </style>
 </head>
 <body>
 
-    <!-- BACKGROUND VIDEO -->
-    <video autoplay muted loop playsinline id="bg-video">
-        <source src="videos/background.mp4" type="video/mp4">
-    </video>
-
-    <div class="overlay"></div>
-    <div class="title">Celebration of the Life of Joyce Lorraine Douglas</div>
-
     <div id="canvas-container">
+
+        <!-- BACKGROUND VIDEO -->
+        <video autoplay muted loop playsinline id="bg-video">
+            <source src="videos/background.mp4" type="video/mp4">
+        </video>
+
+        <div class="overlay"></div>
+        <div class="title">My Interactive Gallery</div>
 
         <!-- VIDEO 1 -->
         <a href="videos/CHRISTMAS_1999.mp4" target="_blank" class="video-point" style="top: 15%; right: 25%;">
@@ -347,18 +325,18 @@
             <div class="label">Video 6 (YouTube)</div>
         </a>
 
-        <!-- STILL IMAGE 1 -->
+        <!-- STILL IMAGE 1 - Position: 35% from top, centered -->
         <div class="image-point" style="top: 35%; left: 50%; transform: translateX(-50%);" onclick="openLightbox('images/image1-full.jpg')">
             <img src="images/image1-thumb.jpg" alt="Image 1">
         </div>
 
-        <!-- STILL IMAGE 2 -->
-        <div class="image-point" style="bottom: 35%; left: 30%;" onclick="openLightbox('images/image2-full.jpg')">
+        <!-- STILL IMAGE 2 - Position: 65% from top, 30% from left -->
+        <div class="image-point" style="top: 65%; left: 30%;" onclick="openLightbox('images/image2-full.jpg')">
             <img src="images/image2-thumb.jpg" alt="Image 2">
         </div>
 
-        <!-- STILL IMAGE 3 -->
-        <div class="image-point" style="bottom: 35%; right: 30%;" onclick="openLightbox('images/image3-full.jpg')">
+        <!-- STILL IMAGE 3 - Position: 65% from top, 30% from right -->
+        <div class="image-point" style="top: 65%; right: 30%;" onclick="openLightbox('images/image3-full.jpg')">
             <img src="images/image3-thumb.jpg" alt="Image 3">
         </div>
 
@@ -386,20 +364,11 @@
             }
         });
 
-        // Pause/play preview videos on hover/touch
+        // Pause/play preview videos on hover
         document.querySelectorAll('.video-point video').forEach(video => {
             const parent = video.closest('.video-point');
             parent.addEventListener('mouseenter', () => video.play());
             parent.addEventListener('mouseleave', () => video.pause());
-            
-            // Touch support for mobile
-            parent.addEventListener('touchstart', () => {
-                if (video.paused) {
-                    video.play();
-                } else {
-                    video.pause();
-                }
-            });
         });
     </script>
 
