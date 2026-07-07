@@ -15,149 +15,116 @@
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
             overflow: hidden;
             background: #000;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            min-height: 100vh;
         }
 
-        /* ============================================ */
-        /* MAIN CONTAINER - Maintains aspect ratio */
-        /* ============================================ */
-        #canvas-container {
-            position: relative;
-            width: 100vw;
-            height: 100vh;
-            max-width: 100vw;
-            max-height: 100vh;
-            overflow: hidden;
-        }
-
-        /* For 16:9 background video, use this aspect ratio */
-        @media (min-aspect-ratio: 16/9) {
-            #canvas-container {
-                width: 100vw;
-                height: calc(100vw * 9 / 16);
-                max-height: 100vh;
-            }
-        }
-
-        @media (max-aspect-ratio: 16/9) {
-            #canvas-container {
-                width: calc(100vh * 16 / 9);
-                height: 100vh;
-                max-width: 100vw;
-            }
-        }
-
-        /* BACKGROUND VIDEO */
+        /* BACKGROUND VIDEO - Shows full video */
         #bg-video {
-            position: absolute;
+            position: fixed;
             top: 0;
             left: 0;
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
+            width: 100vw;
+            height: 100vh;
+            object-fit: contain;
             z-index: 1;
         }
 
         /* DARK OVERLAY */
         .overlay {
-            position: absolute;
+            position: fixed;
             top: 0;
             left: 0;
             width: 100%;
             height: 100%;
             background: rgba(0, 0, 0, 0.5);
             z-index: 2;
+            pointer-events: none;
         }
 
         /* TITLE */
         .title {
-            position: absolute;
-            top: 5%;
+            position: fixed;
+            top: 20px;
             left: 50%;
             transform: translateX(-50%);
             color: white;
-            font-size: 3vw;
+            font-size: 2.5rem;
             text-shadow: 0 0 20px rgba(0,0,0,0.9);
             z-index: 10;
             text-align: center;
-            white-space: nowrap;
         }
 
-        /* VIDEO THUMBNAILS - Positioned relative to container */
+        /* VIDEO THUMBNAILS */
         .video-point {
-            position: absolute;
+            position: fixed;
             cursor: pointer;
-            border-radius: 1vw;
+            border-radius: 12px;
             overflow: hidden;
-            box-shadow: 0 0.5vw 2vw rgba(0, 0, 0, 0.6);
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.6);
             transition: all 0.3s ease;
-            border: 0.2vw solid rgba(255, 255, 255, 0.3);
+            border: 3px solid rgba(255, 255, 255, 0.3);
             background: rgba(0, 0, 0, 0.6);
             z-index: 5;
         }
 
         .video-point:hover {
             transform: scale(1.1);
-            box-shadow: 0 1vw 3vw rgba(0, 0, 0, 0.8);
+            box-shadow: 0 12px 40px rgba(0, 0, 0, 0.8);
             border-color: rgba(255, 255, 255, 0.9);
             z-index: 100;
         }
 
         .video-point video,
         .video-point img {
-            width: 15vw;
-            height: 9vw;
+            width: 200px;
+            height: 120px;
             object-fit: cover;
             display: block;
             pointer-events: none;
         }
 
         .video-point .label {
-            padding: 0.5vw;
+            padding: 8px;
             color: white;
             text-align: center;
-            font-size: 1vw;
+            font-size: 14px;
             font-weight: bold;
             text-shadow: 1px 1px 3px rgba(0,0,0,0.9);
         }
 
         .video-point .youtube-badge {
             position: absolute;
-            top: 0.5vw;
-            right: 0.5vw;
+            top: 5px;
+            right: 5px;
             background: #ff0000;
             color: white;
-            padding: 0.3vw 0.6vw;
-            border-radius: 0.3vw;
-            font-size: 0.8vw;
+            padding: 3px 8px;
+            border-radius: 4px;
+            font-size: 11px;
             font-weight: bold;
         }
 
         /* STILL IMAGES */
         .image-point {
-            position: absolute;
+            position: fixed;
             cursor: pointer;
-            border-radius: 1vw;
+            border-radius: 12px;
             overflow: hidden;
-            box-shadow: 0 0.5vw 2vw rgba(0, 0, 0, 0.6);
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.6);
             transition: all 0.3s ease;
-            border: 0.2vw solid rgba(255, 255, 255, 0.3);
+            border: 3px solid rgba(255, 255, 255, 0.3);
             z-index: 5;
         }
 
         .image-point:hover {
             transform: scale(1.15);
-            box-shadow: 0 1vw 3vw rgba(255, 255, 255, 0.3);
+            box-shadow: 0 12px 40px rgba(255, 255, 255, 0.3);
             border-color: rgba(255, 255, 255, 0.9);
             z-index: 100;
         }
 
         .image-point img {
-            width: 13vw;
-            height: 9vw;
+            width: 180px;
+            height: 120px;
             object-fit: cover;
             display: block;
         }
@@ -197,24 +164,10 @@
             cursor: pointer;
         }
 
-        /* ============================================ */
         /* MOBILE RESPONSIVE */
-        /* ============================================ */
         @media screen and (max-width: 768px) {
             body {
                 overflow-y: auto;
-            }
-
-            #canvas-container {
-                width: 100vw !important;
-                height: auto !important;
-                max-width: 100vw !important;
-                max-height: none !important;
-                display: flex;
-                flex-direction: column;
-                align-items: center;
-                padding: 80px 15px 40px;
-                gap: 25px;
             }
 
             #bg-video {
@@ -225,6 +178,11 @@
                 background: rgba(0, 0, 0, 0.8);
             }
 
+            .title {
+                position: fixed;
+                font-size: 1.8rem;
+            }
+
             .video-point,
             .image-point {
                 position: relative !important;
@@ -233,8 +191,10 @@
                 right: auto !important;
                 bottom: auto !important;
                 transform: none !important;
-                width: 100%;
+                width: 90%;
                 max-width: 350px;
+                margin: 0 auto 25px;
+                display: block;
             }
 
             .video-point video,
@@ -254,26 +214,18 @@
                 font-size: 16px;
                 padding: 12px;
             }
-
-            .title {
-                font-size: 1.8rem;
-                position: fixed;
-                top: 20px;
-            }
         }
     </style>
 </head>
 <body>
 
-    <div id="canvas-container">
+    <!-- BACKGROUND VIDEO -->
+    <video autoplay muted loop playsinline id="bg-video">
+        <source src="videos/background.mp4" type="video/mp4">
+    </video>
 
-        <!-- BACKGROUND VIDEO -->
-        <video autoplay muted loop playsinline id="bg-video">
-            <source src="videos/background.mp4" type="video/mp4">
-        </video>
-
-        <div class="overlay"></div>
-        <div class="title">My Interactive Gallery</div>
+    <div class="overlay"></div>
+    <div class="title">Celebration of the Life of Joyce Lorraine Douglas</div>
 
         <!-- VIDEO 1 -->
         <a href="videos/CHRISTMAS_1999.mp4" target="_blank" class="video-point" style="top: 15%; right: 25%;">
@@ -325,21 +277,19 @@
             <div class="label">Video 6 (YouTube)</div>
         </a>
 
-        <!-- STILL IMAGE 1 - Position: 35% from top, centered -->
-        <div class="image-point" style="top: 35%; left: 50%; transform: translateX(-50%);" onclick="openLightbox('images/image1-full.jpg')">
-            <img src="images/image1-thumb.jpg" alt="Image 1">
-        </div>
+    <!-- STILL IMAGE 1 -->
+    <div class="image-point" data-x="45" data-y="35" onclick="openLightbox('images/image1-full.jpg')">
+        <img src="images/image1-thumb.jpg" alt="Image 1">
+    </div>
 
-        <!-- STILL IMAGE 2 - Position: 65% from top, 30% from left -->
-        <div class="image-point" style="top: 65%; left: 30%;" onclick="openLightbox('images/image2-full.jpg')">
-            <img src="images/image2-thumb.jpg" alt="Image 2">
-        </div>
+    <!-- STILL IMAGE 2 -->
+    <div class="image-point" data-x="25" data-y="65" onclick="openLightbox('images/image2-full.jpg')">
+        <img src="images/image2-thumb.jpg" alt="Image 2">
+    </div>
 
-        <!-- STILL IMAGE 3 - Position: 65% from top, 30% from right -->
-        <div class="image-point" style="top: 65%; right: 30%;" onclick="openLightbox('images/image3-full.jpg')">
-            <img src="images/image3-thumb.jpg" alt="Image 3">
-        </div>
-
+    <!-- STILL IMAGE 3 -->
+    <div class="image-point" data-x="65" data-y="65" onclick="openLightbox('images/image3-full.jpg')">
+        <img src="images/image3-thumb.jpg" alt="Image 3">
     </div>
 
     <!-- LIGHTBOX -->
@@ -349,6 +299,64 @@
     </div>
 
     <script>
+        // ============================================
+        // DYNAMIC POSITIONING BASED ON VIDEO SIZE
+        // ============================================
+        
+        const bgVideo = document.getElementById('bg-video');
+        const videoPoints = document.querySelectorAll('.video-point');
+        const imagePoints = document.querySelectorAll('.image-point');
+
+        function positionElements() {
+            // Get the actual rendered size and position of the video
+            const videoRect = bgVideo.getBoundingClientRect();
+            
+            // Calculate the actual video area (excluding black bars)
+            const videoWidth = videoRect.width;
+            const videoHeight = videoRect.height;
+            const videoLeft = videoRect.left;
+            const videoTop = videoRect.top;
+
+            // Position video thumbnails
+            videoPoints.forEach(point => {
+                const xPercent = parseFloat(point.dataset.x);
+                const yPercent = parseFloat(point.dataset.y);
+                
+                const x = videoLeft + (videoWidth * xPercent / 100);
+                const y = videoTop + (videoHeight * yPercent / 100);
+                
+                point.style.left = x + 'px';
+                point.style.top = y + 'px';
+                point.style.transform = 'translate(-50%, -50%)';
+            });
+
+            // Position image thumbnails
+            imagePoints.forEach(point => {
+                const xPercent = parseFloat(point.dataset.x);
+                const yPercent = parseFloat(point.dataset.y);
+                
+                const x = videoLeft + (videoWidth * xPercent / 100);
+                const y = videoTop + (videoHeight * yPercent / 100);
+                
+                point.style.left = x + 'px';
+                point.style.top = y + 'px';
+                point.style.transform = 'translate(-50%, -50%)';
+            });
+        }
+
+        // Position on load
+        window.addEventListener('load', positionElements);
+        
+        // Reposition on resize
+        window.addEventListener('resize', positionElements);
+        
+        // Reposition when video metadata loads
+        bgVideo.addEventListener('loadedmetadata', positionElements);
+
+        // ============================================
+        // LIGHTBOX FUNCTIONALITY
+        // ============================================
+        
         function openLightbox(imageSrc) {
             document.getElementById('lightbox-img').src = imageSrc;
             document.getElementById('lightbox').classList.add('active');
@@ -364,7 +372,10 @@
             }
         });
 
-        // Pause/play preview videos on hover
+        // ============================================
+        // VIDEO HOVER EFFECTS
+        // ============================================
+        
         document.querySelectorAll('.video-point video').forEach(video => {
             const parent = video.closest('.video-point');
             parent.addEventListener('mouseenter', () => video.play());
